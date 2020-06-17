@@ -1,4 +1,4 @@
-# ŚWIATŁA # FDC # 1.0 ###
+# ŚWIATŁA # FDC # 0.1.1 ###
 
 import random, time, os, sys, pygame
 RX = 16
@@ -40,41 +40,41 @@ borx = 32 #ramka x (od lewej)
 bory = 64 #ramka y (od góry)
 
 
-class Gracz(pygame.sprite.Sprite):
+class Gracz(pygame.sprite.Sprite): #player
     def __init__(self,xy=(borx+siat*7+siat/2,bory+siat*7+siat/2)):
         super().__init__()
         self.image = pygame.image.load(cel)
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = xy
 
-    def przesuń(self,kier=0):
+    def przesuń(self,kier=0): #navigation
       krok = pygame.mixer.Sound('step.wav')
-      if   kier==0 or kier=='drzewo': pass    
+      if   kier==0 or kier=='drzewo': pass
       elif (kier==1 or kier=='lewo'):
         self.rect.x -= siat; krok.play()
-      elif (kier==2 or kier=='prawo'): 
+      elif (kier==2 or kier=='prawo'):
         self.rect.x += siat; krok.play()
       elif (kier==3 or kier=='góra'):
         self.rect.y -= siat; krok.play()
       elif (kier==4 or kier=='dół'):
         self.rect.y += siat; krok.play()
       else: pass
-        
 
-class Światło(pygame.sprite.Sprite):
+
+class Światło(pygame.sprite.Sprite): #light
   def __init__(self):
     super().__init__()
-    self.image=pygame.image.load(brak)  
+    self.image=pygame.image.load(brak)
     self.rect = self.image.get_rect()
 
-class Blok(pygame.sprite.Sprite):
+class Blok(pygame.sprite.Sprite): #field
   def __init__(self):
     super().__init__()
-    self.image=pygame.image.load(blok)  
+    self.image=pygame.image.load(blok)
     self.rect = self.image.get_rect()
-    
 
-class Plansza():
+
+class Plansza(): #gameboard
   def __init__(self,x=RX,y=RY):
     self.x = x
     self.y = y
@@ -130,10 +130,10 @@ class Plansza():
          for i in range(len(wiersz)):
           print("|{}".format(lk%10), end='')
           lk+=1
-         print("|~") 
+         print("|~")
          for i in range(len(wiersz)):
           print("--", end='')
-         print("---") 
+         print("---")
         for indeks, element in enumerate(wiersz):
             if indeks == 0:
                 print('|{}|'.format(element), end = '')
@@ -153,15 +153,15 @@ class Plansza():
           elif element==0:
             self.lampy[i].image=pygame.image.load(wyl)
           else:
-            self.lampy[i].image=pygame.image.load(brak) 
-        lw+=1 
-   
+            self.lampy[i].image=pygame.image.load(brak)
+        lw+=1
+
     self.lista_lamp.draw(ekran)
-  
+
   def zaznacz(self,xy): #zanzaczanie obszarów do interakcji
     action = pygame.mixer.Sound('fire.wav')
     action.play()
-    
+
     x=xy[0]
     y=xy[1]
     współrzędne = []
@@ -172,15 +172,15 @@ class Plansza():
     współrzędne +=[(x,y+1)]
     współrzędne +=[(x,y-1)]
     #print(współrzędne)
-    
+
     if self.tablica[xy[0]][xy[1]]!=blank:
      for i,elem in enumerate(współrzędne):
       x=elem[0]
       y=elem[1]
       if (0 <= x < RX) and (0 <= y < RY):
-        self.odmień(elem)        
+        self.odmień(elem)
     #self.wypisz()
-    
+
 
   def odmień(self,xy): #zmiana wybranych obszarów
     x=xy[0]
@@ -213,8 +213,8 @@ class Plansza():
         if self.tablica[x][y]==0 or self.tablica[x][y]==0:
              self.zaznacz((x,y))
              licznik+=-1
-     
-      
+
+
 
 class Cel():
   def __init__(self,x=RX,y=RY):
@@ -238,7 +238,7 @@ class Cel():
     elif (kier==4 or kier=='dół') and self.y < RY-1:
       self.y+=1; self.grafika.przesuń(kier)
     else: pass
-    
+
 
   def pobierz(self):
     namiary = [-1,-1]
@@ -363,9 +363,9 @@ class Mtitel(pygame.sprite.Sprite):
   super().__init__()
   self.image=pygame.image.load("maintitel.png")
   self.rect = self.image.get_rect()
-  
+
 ###   ~~MENU~~
-  
+
 k=Komunikat()
 Du = 0
 pygame.mixer.music.load('DRBR.mp3')
@@ -377,8 +377,8 @@ while GAME:
     for zdarzenie in pygame.event.get():
         if zdarzenie.type == pygame.QUIT:
             GAME = False
-            
-        
+
+
         elif zdarzenie.type == pygame.MOUSEBUTTONDOWN:
             mos_x, mos_y = pygame.mouse.get_pos()
             #KLIKNIĘCIE NA ROZPOCZNIJ
@@ -387,20 +387,20 @@ while GAME:
                     GAME=0
                     effect = pygame.mixer.Sound('clik.wav')
                     effect.play()
-            #KLIKNIĘCIE NA ROZPOCZNIJ
+            #KLIKNIĘCIE NA DUEL
             if mos_x > 300-100 and mos_x <300+100:
                 if mos_y > 375-25 and mos_y <375+25:
                     GAME=0; LIFE=0; Du=1
                     effect = pygame.mixer.Sound('clik.wav')
                     effect.play()
-            #KLIKNIĘCIE NA WYJŚCIE            
+            #KLIKNIĘCIE NA WYJŚCIE
             if mos_x > 300-100 and mos_x <300+100:
                 if mos_y > 450-25 and mos_y <450+25:
                     GAME=0; LIFE=0
                     effect = pygame.mixer.Sound('clik.wav')
                     effect.play()
                     time.sleep(1)
-    
+
     k.domyślne()
     k.menu()
     label = myfont.render("Rozpocznij!", 5, biały)
@@ -412,7 +412,7 @@ while GAME:
 
     pygame.display.flip()
     zegar.tick(15)
-    
+
 
 ###   ROZGRYWKA
 
@@ -432,6 +432,7 @@ while(ll):
  p.stworz()
  p.wypełnij(poziom)
  czas=(poziom+1)*60+(poziom-5)*7+poziom*3 #skalowanie czasu
+ 
 
  c=Cel()
  k=Komunikat()
@@ -442,8 +443,8 @@ while(ll):
    for zdarzenie in pygame.event.get():
       if zdarzenie.type == pygame.QUIT:
            LIFE = False
-           
-   k.domyślne()       
+
+   k.domyślne()
    p.maluj()
    c.maluj()
 
@@ -459,14 +460,14 @@ while(ll):
    else:
     label = myfont.render("Czas:"+str(int(czas)), 5, czerwony)
     ekran.blit(label, (620, 200))
-   if ruchy < 7*(36+poziom*36+(poziom-4)*5)/10: 
+   if ruchy < 7*(36+poziom*36+(poziom-4)*5)/10:
     label = myfont.render("Zamiany:"+str(int(ruchy)), 5, biały)
     ekran.blit(label, (620, 250))
    else:
     label = myfont.render("Zamiany:"+str(int(ruchy)), 5, czerwony)
     ekran.blit(label, (620, 250))
 
-   key = pygame.key.get_pressed()  
+   key = pygame.key.get_pressed()
    if key[pygame.K_SPACE]:p.zaznacz(c.pobierz());ruchy+=1
    if key[pygame.K_RIGHT]:c.przesuń(2)
    if key[pygame.K_LEFT]:c.przesuń(1)
@@ -474,7 +475,7 @@ while(ll):
    if key[pygame.K_DOWN]:c.przesuń(4)
    if key[pygame.K_q]: LIFE = 0
    if key[pygame.K_n]: GAME = 0
-      
+
    pygame.display.flip()
    zegar.tick(15)
    czas-=0.1
@@ -490,14 +491,14 @@ while(ll):
  GAME = 1
 
 if LIFE == 0 and GAME == 1:
-  ekran.fill(czerwony)  
+  ekran.fill(czerwony)
   k.porażka()
   label = myfont.render("Wynik:"+str(int(wynik)), 5, złoty)
   ekran.blit(label, (475, 250))
   pygame.display.flip()
   zegar.tick(15)
   time.sleep(4)
-  
+
 elif GAME == 1:
   ekran.fill(czarny)
   k.zwycięstwo()
@@ -514,7 +515,7 @@ elif Du == 1:
  ll = len(DLDB)
  wyl="zgas.png"
  reve = pygame.mixer.Sound('re2.wav')
- 
+
  pygame.mixer.music.load('DRDH.mp3')
  pygame.mixer.music.play(-1)
 
@@ -542,8 +543,8 @@ elif Du == 1:
    for zdarzenie in pygame.event.get():
       if zdarzenie.type == pygame.QUIT:
            LIFE = False
-           
-   k.domyślne()       
+
+   k.domyślne()
    p.maluj()
    c.maluj()
 
@@ -564,14 +565,14 @@ elif Du == 1:
    else:
     label = myfont.render("Czas:"+str(int(czas)), 5, czerwony)
     ekran.blit(label, (620, 200))
-   if ruchy < 7*(36+poziom*36+(poziom-4)*5)/10: 
+   if ruchy < 7*(36+poziom*36+(poziom-4)*5)/10:
     label = myfont.render("Zamiany:"+str(int(ruchy)), 5, biały)
     ekran.blit(label, (620, 250))
    else:
     label = myfont.render("Zamiany:"+str(int(ruchy)), 5, czerwony)
     ekran.blit(label, (620, 250))
 
-   key = pygame.key.get_pressed()  
+   key = pygame.key.get_pressed()
    if key[pygame.K_SPACE]:p.zaznacz(c.pobierz());ruchy-=1
    if key[pygame.K_RIGHT]:c.przesuń(2)
    if key[pygame.K_LEFT]:c.przesuń(1)
@@ -580,13 +581,13 @@ elif Du == 1:
    if key[pygame.K_q]: pass
       # if player == 1: GRACZ1=0
       # elif player==2: GRACZ2=0
-      
+
    pygame.display.flip()
    zegar.tick(15)
    czas-=0.1
    if czas < -1:
-       if player == 1: player=2 
-       elif player == 2: player=1 
+       if player == 1: player=2
+       elif player == 2: player=1
        else: pass
        tura+=1
        czas=0; ruchy=1
@@ -594,7 +595,7 @@ elif Du == 1:
        ruchy+=tura
        reve.play()
        time.sleep(1)
-       
+
    if ruchy < 1:
        if player == 1: player=2
        elif player == 2: player=1
@@ -625,10 +626,9 @@ elif Du == 1:
   pygame.display.flip()
   zegar.tick(15)
   time.sleep(4)
-  
+
 else: pass
 
 pygame.display.quit()
 pygame.quit()
 sys.exit()
-  
