@@ -483,8 +483,8 @@ while(ll):
  p.stworz()
  p.wypełnij(poziom)
  #czas=(poziom+1)*60+(poziom-5)*7+poziom*3
- czas=(poziom+1)*poziom*2+poziom+30 #skalowanie czasu
- limit = len(LDB[poziom])*4+10
+ czas=(poziom*poziom)*5-poziom+30 #skalowanie czasu
+ limit = len(LDB[poziom])*poziom+10 #skalowanie limitu
 
  c=Cel()
  k=Komunikat()
