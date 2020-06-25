@@ -251,15 +251,12 @@ class Plansza(): #gameboard
              if elem==1: warunek = 0
     return warunek-1
 
-  def losowe_znaczenia(self,licznik):
+  def losowe_znaczenia(self,licznik,lvl):
+    lvl = list(DLDB[lvl])
     while licznik:
-        x=random.choice(range(0,self.x))
-        y=random.choice(range(0,self.y))
-        if self.tablica[x][y]==0 or self.tablica[x][y]==0:
-             self.zaznacz((x,y))
-             licznik+=-1
-
-
+        b=random.choice(range(0,len(lvl)-1))
+        self.zaznacz((lvl[b][1],lvl[b][0]))
+        licznik+=-1
 
 class Cel():
   def __init__(self,x=RX,y=RY):
@@ -609,7 +606,7 @@ elif Du == 1:
   p.wypełnij2(poziom)
   czas=10+tura*9 #skalowanie czasu
 
-  p.losowe_znaczenia(100)
+  p.losowe_znaczenia(100,poziom)
   #p.wypisz()
 
   c=Cel()
