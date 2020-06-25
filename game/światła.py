@@ -497,7 +497,8 @@ while(ll):
            LIFE = False
 
    k.domyślne()
-   p.maluj()
+   p.maluj() #  <-- HERE WAS THE MAJOR CRASH
+             # fixed with update 3.4 -> 3.7
    c.maluj()
 
    GAME = -p.sprawdź()
