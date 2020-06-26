@@ -620,7 +620,7 @@ elif Du == 1:
    k.tło()
    for zdarzenie in pygame.event.get():
       if zdarzenie.type == pygame.QUIT:
-           LIFE = False
+           Du=0
 
    k.domyślne()
    p.maluj()
@@ -628,6 +628,9 @@ elif Du == 1:
 
    GRACZ2 = -p.sprawdź()
    GRACZ1 = -p.sprawdź2()
+   if Du==0:
+       GRACZ1=0
+       GRACZ2=GRACZ1
 
    if player == 1: gracz='P1'; tło="tlo.jpg"
    elif player == 2: gracz='P2'; tło="tlo2.jpg"
@@ -650,19 +653,38 @@ elif Du == 1:
     label = myfont.render("Zamiany:"+str(int(ruchy)), 5, czerwony)
     ekran.blit(label, (620, 250))
 
-   key = pygame.key.get_pressed()
-   if key[pygame.K_SPACE]:p.zaznacz(c.pobierz());ruchy-=1
-   if key[pygame.K_RIGHT]:c.przesuń(2)
-   if key[pygame.K_LEFT]:c.przesuń(1)
-   if key[pygame.K_UP]:c.przesuń(3)
-   if key[pygame.K_DOWN]:c.przesuń(4)
-   if key[pygame.K_q]: pass
-      # if player == 1: GRACZ1=0
-      # elif player==2: GRACZ2=0
+   if(pause):
+       key = pygame.key.get_pressed()
+       if kb==0 and key[pygame.K_p]:
+           pause=(pause+1)%2 #unpause
+           if pygame.mixer.music.get_volume()!=0:
+               pygame.mixer.music.set_volume(vol)
+       k.pauza()
+       
+   else: #non-active segment during pause
+       key = pygame.key.get_pressed()
+       if kb==0: #key input check
+           if key[pygame.K_SPACE]:p.zaznacz(c.pobierz());ruchy-=1
+           if key[pygame.K_RIGHT]:c.przesuń(2)
+           if key[pygame.K_LEFT]:c.przesuń(1)
+           if key[pygame.K_UP]:c.przesuń(3)
+           if key[pygame.K_DOWN]:c.przesuń(4)
+           if key[pygame.K_q]: GRACZ1=0; GRACZ2=GRACZ1;
+           #if key[pygame.K_n]: GAME = 0
+           if key[pygame.K_p]:
+               pause=(pause+1)%2; pygame.mixer.music.set_volume(vol/5.33)
+           if key[pygame.K_m]:
+               if pygame.mixer.music.get_volume()==0:
+                   pygame.mixer.music.set_volume(vol)
+               else: pygame.mixer.music.set_volume(0.0)
+
+   kb=0;    #key block
+   for i in range(len(key)):
+       if(key[i]!=0): kb=1; break;
 
    pygame.display.flip()
    zegar.tick(15)
-   czas-=0.1
+   if pause==0: czas-=0.1
    if czas < -1:
        if player == 1: player=2
        elif player == 2: player=1
@@ -688,6 +710,7 @@ elif Du == 1:
   ll=0
 
  if GRACZ1 == 1:
+  pygame.mixer.music.fadeout(3000) 
   ekran.fill(czarny)
   k.zwycięstwo()
   label = myfont.render("Wygrał Gracz 1!", 5, złoty)
@@ -697,9 +720,20 @@ elif Du == 1:
   time.sleep(4)
 
  elif GRACZ2 == 1:
+  pygame.mixer.music.fadeout(3000) 
   ekran.fill(czarny)
   k.zwycięstwo()
   label = myfont.render("Wygrał Gracz 2!", 5, złoty)
+  ekran.blit(label, (475, 250))
+  pygame.display.flip()
+  zegar.tick(15)
+  time.sleep(4)
+
+ elif GRACZ1 == GRACZ2:
+  pygame.mixer.music.fadeout(3000) 
+  ekran.fill(czarny)
+  k.porażka()
+  label = myfont.render("Remis!!!", 5, złoty)
   ekran.blit(label, (475, 250))
   pygame.display.flip()
   zegar.tick(15)
