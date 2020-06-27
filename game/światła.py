@@ -1,4 +1,4 @@
-# ŚWIATŁA # FDC # 1.0.0 ###
+# ŚWIATŁA # FDC # 1.0.1 ###
 
 import random, time, os, sys, pygame
 RX = 16
@@ -254,6 +254,16 @@ class Plansza(): #gameboard
         self.zaznacz((lvl[b][1],lvl[b][0]))
         licznik+=-1
 
+  def daj_procent(self):
+      sub=0; sur=0;
+      for wiersz in self.tablica:
+         for i,elem in enumerate(wiersz):
+             if elem==0: sub+=1
+             elif elem==1:
+                 sub+=1
+                 sur+=1
+      return int(250*sur/sub)
+
 class Cel():
   def __init__(self,x=RX,y=RY):
     self.x = int(x/2)
@@ -350,6 +360,13 @@ class Komunikat():
         grafika.rect.centery = self.y
         wyświetlanie.add(grafika)
         wyświetlanie.draw(ekran)
+
+    def mgła(self,cień):
+        s = pygame.Surface((ROZMIAR),pygame.SRCALPHA)
+        rg=int(cień*3/4); b=int(cień/2)
+        s.fill((55+rg,55+rg,128+b,16))                       
+        ekran.blit(s, (0,0))
+        
     def porażka(self):
         wyświetlanie = pygame.sprite.Group()
         grafika = Defeat()
@@ -488,7 +505,8 @@ while(ll):
    for zdarzenie in pygame.event.get():
       if zdarzenie.type == pygame.QUIT:
            LIFE = False
-
+           
+   k.mgła(p.daj_procent())
    k.domyślne()
    p.maluj() #  <-- HERE WAS THE MAJOR CRASH
              # fixed with update 3.4 -> 3.7
